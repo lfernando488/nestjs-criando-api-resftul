@@ -23,9 +23,3 @@ export class UsuarioRepository{
     }
 
 }
-
-type Usuario = {
-    nomne: string,
-    email: string,
-    senha: string
-}
