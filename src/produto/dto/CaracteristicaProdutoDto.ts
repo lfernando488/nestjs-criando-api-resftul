@@ -1,10 +1,10 @@
-import { IsEmpty } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class CaracteristicaProdutoDTO{
     
-    @IsEmpty()
+    @IsNotEmpty({message: "O nome de uma caracteristica de produto nao pode ser vazio."})
     nome: string;
     
-    @IsEmpty()
+    @IsNotEmpty({message: "A descrição de uma caracteristica de produto nao pode ser vazia."})
     descricao: string;
 }

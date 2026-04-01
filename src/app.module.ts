@@ -7,11 +7,7 @@ import { BdConfigService } from './bd.config.service';
 @Module({
   imports: [
     UsuarioModule, 
-    ProdutoModule, 
-    TypeOrmModule.forRootAsync({
-      useClass: BdConfigService,
-      inject: [BdConfigService]
-    })
+    ProdutoModule
   ],
   controllers: [],
   providers: [],

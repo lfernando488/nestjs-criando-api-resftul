@@ -5,7 +5,8 @@ import { EmailEhUnicoValidator } from "./validacao/email-eh-unico-validator";
 
 @Module({
     controllers: [UsuarioController],
-    providers: [UsuarioRepository, EmailEhUnicoValidator]
+    providers: [UsuarioRepository, EmailEhUnicoValidator],
+    exports: [UsuarioRepository]
 })
 export class UsuarioModule{
     

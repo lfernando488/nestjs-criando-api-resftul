@@ -11,8 +11,7 @@ export class UsuarioRepository{
     }
 
     async listar(){
-    return this.usuarios;
-    //console.log(this.usuarios);
+        return this.usuarios;
     }
 
     async existeComEmail(email: string) {
@@ -22,15 +21,15 @@ export class UsuarioRepository{
         return possivelUsuario !== undefined;
     }
 
-    private buscaPorId(id:string){
+    async buscaPorId(id:string){
             const possivelUsuario = this.usuarios.find(
             usuarioSalvo => usuarioSalvo.id  === id
         );
 
         if(!possivelUsuario){
-            throw new Error('O usuário não existe!')
+            //throw new Error('O usuário não existe!')
+            return null;
         }
-
         return possivelUsuario;
     }
 
