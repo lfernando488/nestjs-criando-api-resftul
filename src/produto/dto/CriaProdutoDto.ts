@@ -1,28 +1,36 @@
-import { IsArray, IsNotEmpty, MinLength, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsDecimal, IsEmpty, IsNotEmpty, IsPositive, MaxLength, min, Min, MinLength, ValidateNested } from "class-validator";
 import { CaracteristicaProdutoDTO } from "./CaracteristicaProdutoDto";
 import { ImagemProdutoDTO } from "./ImagemProdutoDto";
 import { Type } from "class-transformer";
 
 export class CriaProdutoDTO {
   
-  @IsNotEmpty({message: 'O nome não pode ser vazio.'})
-  nome: string;
+    @IsNotEmpty({message: 'O nome não pode ser vazio.'})
+    nome: string;
 
-  valor: number;
+    @IsPositive({ message: 'Preço inválido, deve ser maior que zero.' })
+    @IsDecimal({decimal_digits : '2' }, { message: 'Preço inválido' })
+    valor: number;
   
-  quantidade: number;
+    @Min(10, {message: 'A quantidade inicial deve ser a partir de 10 unidades.'})
+    quantidade: number;
 
-  @MinLength(20, {message: 'A descricao deve ter ao minimo 6 caracteres.'})
-  descricao: string;
+    @MinLength(20, {message: 'A descricao deve ter ao minimo 6 caracteres.'})
+    @MaxLength(1000, {message: 'A descrição não deve ultrapassar 1000 caracteres.'})
+    descricao: string;
   
-  @ValidateNested()
-  @IsArray() 
-  @Type(() => CaracteristicaProdutoDTO)
-  caracteristicas: CaracteristicaProdutoDTO[];
+    @ValidateNested()
+    @IsArray() 
+    @Type(() => CaracteristicaProdutoDTO)
+    @ArrayMinSize(3, {message: 'A caracteristica do produto deve conter ao menos 3 itens.'})
+    caracteristicas: CaracteristicaProdutoDTO[];
   
-  @ValidateNested()
-  @IsArray() 
-  @Type(() => ImagemProdutoDTO)
-  imagens: ImagemProdutoDTO[];
-  categoria: string;
+    @ValidateNested()
+    @IsArray() 
+    @Type(() => ImagemProdutoDTO)
+    @ArrayMinSize(1, {message: 'O produto deve conter ao menos 1 imagem.'})
+    imagens: ImagemProdutoDTO[];
+    
+    @IsEmpty({message: 'A categoria do produto não pode ser vazia.'})
+    categoria: string;
 }

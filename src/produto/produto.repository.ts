@@ -5,4 +5,11 @@ import { ProdutoEntity } from "./produto.entity";
 export class ProdutoRepository{
 
     private produtos: ProdutoEntity[] = [];
+
+    async salvar(produto:ProdutoEntity){
+        this.produtos.push(produto);
+    }
+
+    
+
 }
