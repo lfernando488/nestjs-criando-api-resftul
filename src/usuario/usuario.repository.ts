@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UsuarioEntity } from "./usuario.entity";
+import { AtualizaUsuario } from "./dto/AtualizaUsuario.dto";
 
 @Injectable()
 export class UsuarioRepository{
@@ -20,6 +21,24 @@ export class UsuarioRepository{
             usuario => usuario.email === email
         );
         return possivelUsuario !== undefined;
+    }
+
+    async atualiza(id: string, dadosDeAtualizacao: Partial<UsuarioEntity>) {
+        const possivelUsuario = this.usuarios.find(
+            usuarioSalvo => usuarioSalvo.id  === id
+        );
+
+        if(!possivelUsuario){
+            throw new Error('O usuário não existe!')
+        }
+        
+        Object.entries(dadosDeAtualizacao).forEach(([chave, valor]) =>{
+            if(chave === 'id'){
+                return;
+            }
+            possivelUsuario[chave] = valor;
+        })
+        return possivelUsuario;
     }
 
 }

@@ -1,8 +1,10 @@
+
+import { AtualizaUsuario } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.Dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
 import { UsuarioRepository } from './usuario.repository';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { v4 as uudi} from 'uuid';
 
 @Controller('/usuarios')
@@ -40,4 +42,14 @@ export class UsuarioController {
         
         return usuariosLista; 
     }
+
+    @Put('/:id')
+    async autalizaUsuario(@Param('id') id: string, @Body() novosDadosUsuario: AtualizaUsuario){
+        const usuarioAtualizado = await this.usuarioRepository.atualiza(id, novosDadosUsuario);
+        return{
+            usuario: usuarioAtualizado,
+            message: 'Usuário atualizado com sucesso!'
+        }
+    }
+
 }
