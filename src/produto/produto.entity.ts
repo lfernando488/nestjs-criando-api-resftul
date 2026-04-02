@@ -1,14 +1,39 @@
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+
+@Entity({name:'produtos'})
 export class ProdutoEntity{
-    
+
+    @PrimaryGeneratedColumn('uuid')
     id: string;
+
+    @Column({name: 'usuario_id', length: 100, nullable: false})
     usuarioId: string;
+
+    @Column({name: 'nome', length: 100, nullable: false})
     nome: string;
+
+    @Column({name: 'valor', nullable: false})
+    valor: number;
+
+    @Column({name: 'quantidade_disponivel', nullable: false})
     quantidadeDisponivel: number;
+
+    @Column({name: 'descricao', length: 255, nullable: false})
     descricao: string;
-    caracteristicas: { nome: string; descricao: string; }[]; 
-    imagens:{url: string; descricao: string; }[];
+
+    @Column({name: 'descricao', length: 100, nullable: false})
     categoria: string;
-    dataCriacao: Date;
-    dataAtualizacao: Date;
+    
+    //caracteristicas: { nome: string; descricao: string; }[]; 
+    //imagens:{url: string; descricao: string; }[];
+    
+    @CreateDateColumn({name: 'created_at'})
+    createdAt: string;
+    
+    @UpdateDateColumn({name: 'updated_at'})
+    updatedAt: string;
+    
+    @DeleteDateColumn({name: 'deleted_at'})
+    deletedAt: string;
 
 }

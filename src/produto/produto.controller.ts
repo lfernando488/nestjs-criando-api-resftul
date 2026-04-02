@@ -32,17 +32,17 @@ export class ProdutoController{
         produtoEntity.nome =  dadosDoproduto.nome;
         produtoEntity.quantidadeDisponivel =  dadosDoproduto.quantidadeDisponivel;
         produtoEntity.descricao =  dadosDoproduto.descricao;
-        produtoEntity.caracteristicas = dadosDoproduto.caracteristicas; 
-        produtoEntity.imagens = dadosDoproduto.imagens;
+        //produtoEntity.caracteristicas = dadosDoproduto.caracteristicas; 
+        //produtoEntity.imagens = dadosDoproduto.imagens;
         produtoEntity.categoria =  dadosDoproduto.categoria;
-        produtoEntity.dataCriacao = new Date();
-        produtoEntity.dataAtualizacao = produtoEntity.dataCriacao;
+        produtoEntity.createdAt = '';
+        produtoEntity.updatedAt = produtoEntity.createdAt;
 
         this.produtoRepository.salvar(produtoEntity);
         return {
             produto: new ListaProdutoDTO(
                 produtoEntity.id, produtoEntity.nome, produtoEntity.quantidadeDisponivel,
-                produtoEntity.descricao, produtoEntity.categoria, produtoEntity.dataCriacao
+                produtoEntity.descricao, produtoEntity.categoria, produtoEntity.updatedAt
             ),
             message: 'Produto criado com sucesso!'
         };
