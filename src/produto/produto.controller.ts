@@ -5,14 +5,12 @@ import { ProdutoEntity } from "./produto.entity";
 import { v4 as uudi} from 'uuid';
 import { ListaProdutoDTO } from "./dto/ListaProdutoDto";
 import { UsuarioRepository } from "src/usuario/usuario.repository";
-import { Console } from "console";
 
 @Controller('/produtos')
 export class ProdutoController{
 
-    constructor(private produtoRepository: ProdutoRepository, private usuarioRepository:UsuarioRepository){
-
-    }
+    constructor(private produtoRepository: ProdutoRepository, private usuarioRepository:UsuarioRepository)
+    {}
 
     @Post()
     async criaUsuario(@Body() dadosDoproduto: CriaProdutoDTO) {
@@ -25,7 +23,6 @@ export class ProdutoController{
                 idUsuario: dadosDoproduto.usuarioId,
                 message: 'O usuário informado não existe'
             };
-
         }
         else{
             produtoEntity.usuarioId = dadosDoproduto.usuarioId;
@@ -40,8 +37,6 @@ export class ProdutoController{
         produtoEntity.categoria =  dadosDoproduto.categoria;
         produtoEntity.dataCriacao = new Date();
         produtoEntity.dataAtualizacao = produtoEntity.dataCriacao;
-
-        //console.log(JSON.stringify(produtoEntity, null, 2));
 
         this.produtoRepository.salvar(produtoEntity);
         return {
