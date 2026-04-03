@@ -12,6 +12,7 @@ export class ProdutoService{
     ){}
 
     async criaProduto(produtoEntity: ProdutoEntity){
+        console.log(produtoEntity.caracteristicas.length);
         await this.produtoRepository.save(produtoEntity);
     }
 
