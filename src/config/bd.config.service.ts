@@ -22,7 +22,7 @@ export class BdConfigService implements TypeOrmOptionsFactory{
             //entities: [__dirname + '/**/*.entity{.js, .ts}'],
             entities: [UsuarioEntity, ProdutoEntity],
             synchronize: true,
-            logging: true
+            //logging: true //mostar o SQL gerado
         }
     }
 
