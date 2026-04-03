@@ -1,4 +1,4 @@
-
+import { UsuarioService } from './usuario.service';
 import { AtualizaUsuario } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.Dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
@@ -10,7 +10,10 @@ import { v4 as uudi} from 'uuid';
 @Controller('/usuarios')
 export class UsuarioController {
   
-    constructor(private usuarioRepository: UsuarioRepository){
+    constructor(
+        private usuarioRepository: UsuarioRepository,
+        private usuarioService: UsuarioService
+    ){
 
     }
 
@@ -23,7 +26,7 @@ export class UsuarioController {
         usuarioEntity.nome = dadosDoUsuario.nome;
         usuarioEntity.id = uudi();
 
-        this.usuarioRepository.salvar(usuarioEntity);
+        this.usuarioService.criaUsuario(usuarioEntity);
         return {
             usuario: new ListaUsuarioDTO(usuarioEntity.id, usuarioEntity.nome),
             message: 'Usuário criado com sucesso!'
@@ -32,7 +35,7 @@ export class UsuarioController {
 
     @Get()
     async listarUsuario(){
-        const usuariosSalvos = await this.usuarioRepository.listar();
+        const usuariosSalvos = await this.usuarioService.listarUsuarios();
         const usuariosLista = usuariosSalvos.map(
             usuario => new ListaUsuarioDTO(
                 usuario.id,
@@ -45,7 +48,7 @@ export class UsuarioController {
 
     @Put('/:id')
     async autalizaUsuario(@Param('id') id: string, @Body() novosDadosUsuario: AtualizaUsuario){
-        const usuarioAtualizado = await this.usuarioRepository.atualiza(id, novosDadosUsuario);
+        const usuarioAtualizado = await this.usuarioService.atualizaUsuario(id, novosDadosUsuario);
         return{
             usuario: usuarioAtualizado,
             message: 'Usuário atualizado com sucesso!'
@@ -54,7 +57,7 @@ export class UsuarioController {
 
     @Delete('/:id')
     async removerusuario(@Param('id') id: string){
-        const usuarioRemovido = await this.usuarioRepository.remove(id);
+        const usuarioRemovido = await this.usuarioService.deletaUsuario(id);
         return{
             usuario: usuarioRemovido,
             message: 'Usuário removido com sucesso.'

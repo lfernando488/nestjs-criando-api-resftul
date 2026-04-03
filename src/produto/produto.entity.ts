@@ -21,7 +21,7 @@ export class ProdutoEntity{
     @Column({name: 'descricao', length: 255, nullable: false})
     descricao: string;
 
-    @Column({name: 'descricao', length: 100, nullable: false})
+    @Column({name: 'categoria', length: 100, nullable: false})
     categoria: string;
     
     //caracteristicas: { nome: string; descricao: string; }[]; 
