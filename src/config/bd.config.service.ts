@@ -23,7 +23,8 @@ export class BdConfigService implements TypeOrmOptionsFactory{
             database: this.configService.get<string>('BD_NAME'),
             //entities: [__dirname + '/**/*.entity{.js, .ts}'],
             entities: [UsuarioEntity, ProdutoEntity,ProdutoImagemEntity, ProdutoCaracteristicaEntity],
-            synchronize: true,
+            
+            //synchronize: true,
             //logging: true //mostar o SQL gerado
         }
     }

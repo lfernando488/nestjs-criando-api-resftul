@@ -22,7 +22,7 @@ export class ProdutoController{
         
         const produtoEntity = new ProdutoEntity();    
 
-        produtoEntity.usuarioId = dadosDoproduto.usuarioId;
+        //produtoEntity.usuarioId = dadosDoproduto.usuarioId;
         produtoEntity.id = uudi();       
         produtoEntity.nome =  dadosDoproduto.nome;
         produtoEntity.valor = dadosDoproduto.valor;
