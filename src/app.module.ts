@@ -4,6 +4,7 @@ import { ProdutoModule } from './produto/produto.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BdConfigService } from './config/bd.config.service';
 import { ConfigModule } from '@nestjs/config';
+import { PedidoModule } from './pedido/pedido.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRootAsync({
       useClass: BdConfigService,
       inject: [BdConfigService]
-    })
+    }),
+    PedidoModule
   ],
   controllers: [],
   providers: [],
