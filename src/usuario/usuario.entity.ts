@@ -1,5 +1,5 @@
 import { PedidoEntity } from '../pedido/pedido.entity';
-import {Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
+import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany} from 'typeorm';
 
 @Entity({name: 'usuarios'})
 export class UsuarioEntity{

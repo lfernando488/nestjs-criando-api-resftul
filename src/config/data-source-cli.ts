@@ -10,8 +10,11 @@ const dataSourceOptions : DataSourceOptions = {
     password: process.env.BD_PASSWORD,
     database: process.env.BD_NAME,
     //entities: [__dirname + '/../**/*.entity.{js,ts}'],
-    entities: [__dirname + '/../../**/*.entity.{js,ts}'],
-    migrations: [__dirname + '/../../bd/migrations/*.{js,ts}'],
+    //entities: [__dirname + '/../../**/*.entity.{js,ts}'],
+    //migrations: [__dirname + '/../../bd/migrations/*.{js,ts}'],
+    //migrations: [__dirname + '/../../bd/migrations/*.ts']
+    migrations: ['src/bd/migrations/*.ts'],
+    entities: ['src/**/*.entity.ts'],
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

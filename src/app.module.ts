@@ -11,11 +11,11 @@ import { PedidoModule } from './pedido/pedido.module';
     UsuarioModule, 
     ProdutoModule,
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       useClass: BdConfigService,
-      inject: [BdConfigService]
+      inject: [BdConfigService],
     }),
     PedidoModule
   ],

@@ -3,7 +3,6 @@ import { AtualizaUsuario } from './dto/AtualizaUsuario.dto';
 import { CriaUsuarioDTO } from './dto/CriaUsuario.Dto';
 import { ListaUsuarioDTO } from './dto/ListaUsuario.dto';
 import { UsuarioEntity } from './usuario.entity';
-import { UsuarioRepository } from './usuario.repository';
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { v4 as uudi} from 'uuid';
 
@@ -11,11 +10,8 @@ import { v4 as uudi} from 'uuid';
 export class UsuarioController {
   
     constructor(
-        private usuarioRepository: UsuarioRepository,
         private usuarioService: UsuarioService
-    ){
-
-    }
+    ){}
 
     @Post()
     async criaUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
