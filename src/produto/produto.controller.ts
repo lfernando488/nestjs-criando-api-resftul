@@ -1,62 +1,51 @@
 import { ImagemProdutoDTO } from './dto/ImagemProdutoDto';
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { ProdutoRepository } from "./produto.repository";
-import { CriaProdutoDTO } from "./dto/CriaProdutoDto";
+import { CriaProdutoDTO } from "./dto/CriaProduto.dto";
 import { ProdutoEntity } from "./produto.entity";
 import { v4 as uudi} from 'uuid';
 import { ListaProdutoDTO } from "./dto/ListaProdutoDto";
 import { ProdutoService } from "./produto.service";
 import { ProdutoCaracteristicaEntity } from "./produto-caracteristica.entity";
 import { ProdutoImagemEntity } from './produto-imagem.entity';
+import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
 
 @Controller('/produtos')
 export class ProdutoController{
 
-    constructor(
-        private readonly produtoService : ProdutoService
-    )
+    constructor(private readonly produtoService : ProdutoService)
     {}
 
     @Post()
-    async criaUsuario(@Body() dadosDoproduto: CriaProdutoDTO) {
-        
-        const produtoEntity = new ProdutoEntity();    
+    async criaNovo(@Body() dadosProduto: CriaProdutoDTO) {
+        const produtoCadastrado = await this.produtoService.criaProduto(dadosProduto);
 
-        //produtoEntity.usuarioId = dadosDoproduto.usuarioId;
-        produtoEntity.id = uudi();       
-        produtoEntity.nome =  dadosDoproduto.nome;
-        produtoEntity.valor = dadosDoproduto.valor;
-        produtoEntity.quantidadeDisponivel =  dadosDoproduto.quantidadeDisponivel;
-        produtoEntity.descricao =  dadosDoproduto.descricao;
-
-        produtoEntity.caracteristicas = dadosDoproduto.caracteristicas.map(c => {
-            const entity = new ProdutoCaracteristicaEntity();
-                entity.nome = c.nome;
-                entity.descricao = c.descricao;
-                entity.produto = produtoEntity
-            return entity;
-        });
-
-        produtoEntity.imagens = dadosDoproduto.imagens.map(i => {
-            const entity = new ProdutoImagemEntity();
-            entity.url = i.url;
-            entity.descricao = i.descricao;
-            entity.produto = produtoEntity;
-            return entity;
-        });
-        
-        produtoEntity.categoria =  dadosDoproduto.categoria;
-        produtoEntity.createdAt = new Date().toLocaleString('pt-BR');
-        produtoEntity.updatedAt = produtoEntity.createdAt;
-
-        this.produtoService.criaProduto(produtoEntity);
         return {
-            produto: new ListaProdutoDTO(
-                produtoEntity.id, produtoEntity.nome, produtoEntity.quantidadeDisponivel,
-                produtoEntity.descricao, produtoEntity.categoria, produtoEntity.updatedAt
-            ),
-            message: 'Produto criado com sucesso!'
+            mensagem: 'Produto criado com sucesso.',
+            produto: produtoCadastrado,
+        };
+  }
+
+    @Get()
+        async listaTodos() {
+        return this.produtoService.listProdutos();
+    }
+
+    @Put('/:id')
+    async atualiza(@Param('id') id: string,@Body() dadosProduto: AtualizaProdutoDTO) {
+        const produtoAlterado = await this.produtoService.atualizaProduto(id,dadosProduto);
+        return {
+            mensagem: 'produto atualizado com sucesso',
+            produto: produtoAlterado,
         };
     }
 
+    @Delete('/:id')
+    async remove(@Param('id') id: string) {
+        const produtoRemovido = await this.produtoService.deletaProduto(id);
+        return {
+            mensagem: 'produto removido com sucesso',
+            produto: produtoRemovido,
+        };
+    }
 }

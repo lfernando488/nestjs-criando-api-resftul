@@ -1,10 +1,18 @@
-export class ListaProdutoDTO{
+class ListaCaracteristicaProdutoDTO {
+  nome: string;
+  descricao: string;
+}
 
-    constructor(
-        readonly id: string, readonly nome: string,
-        readonly quantidadeDisponivel: number, readonly descricao: string,
-        readonly categoria: string, readonly dataCriacao: string
-    )
-    {}
+class ListaImagemProdutoDTO {
+  url: string;
+  descricao: string;
+}
 
+export class ListaProdutoDTO {
+  constructor(
+    readonly id: string,
+    readonly nome: string,
+    readonly caracteristicas: ListaCaracteristicaProdutoDTO[],
+    readonly imagens: ListaImagemProdutoDTO[],
+  ) {}
 }

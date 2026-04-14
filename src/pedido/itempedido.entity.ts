@@ -32,6 +32,6 @@ export class ItemPedidoEntity {
   @ManyToOne(() => ProdutoEntity, (produto) => produto.itensPedido, {
     cascade: ['update']
   })
-  produto: ProdutoEntity
+  produto: ProdutoEntity;
 
 }

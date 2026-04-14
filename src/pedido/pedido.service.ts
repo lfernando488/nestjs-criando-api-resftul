@@ -1,5 +1,5 @@
 import { ProdutoRepository } from './../produto/produto.repository';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PedidoEntity } from './pedido.entity';
 import { In, Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { StatusPedido } from './enum/statuspedido.enum';
 import { CriaPedidoDTO } from './dto/CriaPedido.dto';
 import { ItemPedidoEntity } from './itempedido.entity';
 import { ProdutoEntity } from 'src/produto/produto.entity';
+import { AtualizaPedidoDto } from './dto/AtualizaPedido.dto';
 
 @Injectable()
 export class PedidoService {
@@ -22,26 +23,33 @@ export class PedidoService {
   )
   {}
 
+  private async buscaUsuario(id){
+    const usuario = await this.usuarioRepository.findOneBy({id});
+    
+    if(usuario === null)
+      throw new NotFoundException("Usuário não encontrado.")
+    else
+      return usuario;
+  }
+
   async cadastraPedido(usuarioId: string, dadosDoPedido: CriaPedidoDTO) {
-    const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId })
+    
+    const usuario = await this.buscaUsuario(usuarioId );
+
     const produtosIds = dadosDoPedido.itensPedido.map((itemPedido) => itemPedido.produtoId)
 
     const produtosRelacionados = await this.produtoRepository.findBy({ id: In(produtosIds) })
     const pedidoEntity = new PedidoEntity();
 
     pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO
-    
-    if(usuario == null)
-      throw Error ("Usuario não encontrado!");
-
-    pedidoEntity.usuario = usuario
-
+    pedidoEntity.usuario = usuario;
+  
     const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
       const produtoRelacionado = produtosRelacionados.find((produto) => produto.id === itemPedido.produtoId)
       const itemPedidoEntity = new ItemPedidoEntity();
       
-       if(produtoRelacionado == null)
-          throw Error ("Produto não encontrado.");
+       if(produtoRelacionado === undefined)
+          throw new NotFoundException (`O produto ID: ${itemPedido.produtoId} não foi encontrado.`);
 
       itemPedidoEntity.produto = produtoRelacionado
       itemPedidoEntity.precoVenda = produtoRelacionado.valor
@@ -71,6 +79,18 @@ export class PedidoService {
         usuario: true,
       },
     });
+  }
+
+  async atualizaPedido(id: string, dto: AtualizaPedidoDto){
+    const pedido = await this.pedidoRepository.findOneBy({id});
+
+    if(pedido === null){
+      throw new NotFoundException(`Pedido ID:${id} não encontrado.`);
+    }
+    else{
+      Object.assign(pedido, dto);
+      return this.pedidoRepository.save(pedido);
+    }
   }
 
 }
