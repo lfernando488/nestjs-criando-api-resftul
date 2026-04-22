@@ -1,5 +1,4 @@
-import { ProdutoRepository } from './../produto/produto.repository';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PedidoEntity } from './pedido.entity';
 import { In, Repository } from 'typeorm';
@@ -23,6 +22,25 @@ export class PedidoService {
   )
   {}
 
+  private trataDadosDoPedido(dadosDoPedido:CriaPedidoDTO, produtosRelacionados: ProdutoEntity[])
+  {
+    dadosDoPedido.itensPedido.forEach((itemPedido)=>{
+      const produtoRelacionado = produtosRelacionados.find(
+        (produto) => produto.id === itemPedido.produtoId
+      );
+      
+      if(produtoRelacionado === undefined){
+        throw new NotFoundException(`O produto com id ${itemPedido.produtoId} não foi encontrado.`);
+      }
+
+      if(itemPedido.quantidade > produtoRelacionado.quantidadeDisponivel){
+        throw new BadRequestException
+        (`A quantidade disponível do produto ID ${itemPedido.produtoId} é inferior a quantidade solicitada no pedido.`)
+      }
+
+    });
+  }
+
   private async buscaUsuario(id){
     const usuario = await this.usuarioRepository.findOneBy({id});
     
@@ -32,45 +50,49 @@ export class PedidoService {
       return usuario;
   }
 
-  async cadastraPedido(usuarioId: string, dadosDoPedido: CriaPedidoDTO) {
-    
-    const usuario = await this.buscaUsuario(usuarioId );
+    async cadastraPedido(usuarioId: string, dadosDoPedido: CriaPedidoDTO) {
+    const usuario = await this.buscaUsuario(usuarioId);
 
-    const produtosIds = dadosDoPedido.itensPedido.map((itemPedido) => itemPedido.produtoId)
+    const produtosIds = dadosDoPedido.itensPedido.map(
+      (itemPedido) => itemPedido.produtoId,
+    );
 
-    const produtosRelacionados = await this.produtoRepository.findBy({ id: In(produtosIds) })
+    const produtosRelacionados = await this.produtoRepository.findBy({
+      id: In(produtosIds),
+    });
     const pedidoEntity = new PedidoEntity();
 
-    pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO
+    pedidoEntity.status = StatusPedido.EM_PROCESSAMENTO;
     pedidoEntity.usuario = usuario;
-  
-    const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
-      const produtoRelacionado = produtosRelacionados.find((produto) => produto.id === itemPedido.produtoId)
-      const itemPedidoEntity = new ItemPedidoEntity();
-      
-       if(produtoRelacionado === undefined)
-          throw new NotFoundException (`O produto ID: ${itemPedido.produtoId} não foi encontrado.`);
 
-      itemPedidoEntity.produto = produtoRelacionado
-      itemPedidoEntity.precoVenda = produtoRelacionado.valor
+    this.trataDadosDoPedido(dadosDoPedido, produtosRelacionados);
+
+    const itensPedidoEntidades = dadosDoPedido.itensPedido.map((itemPedido) => {
+      const produtoRelacionado = produtosRelacionados.find(
+        (produto) => produto.id === itemPedido.produtoId,
+      );
+
+      const itemPedidoEntity = new ItemPedidoEntity();
+
+      itemPedidoEntity.produto = produtoRelacionado!;
+      itemPedidoEntity.precoVenda = produtoRelacionado!.valor;
       itemPedidoEntity.quantidade = itemPedido.quantidade;
-      itemPedidoEntity.produto.quantidadeDisponivel -= itemPedido.quantidade
-      return itemPedidoEntity
-    })
+      itemPedidoEntity.produto.quantidadeDisponivel -= itemPedido.quantidade;
+      return itemPedidoEntity;
+    });
 
     const valorTotal = itensPedidoEntidades.reduce((total, item) => {
-      return total + item.precoVenda * item.quantidade
+      return total + item.precoVenda * item.quantidade;
     }, 0);
 
-    pedidoEntity.itensPedido = itensPedidoEntidades
+    pedidoEntity.itensPedido = itensPedidoEntidades;
+    pedidoEntity.valorTotal = valorTotal;
 
-    pedidoEntity.valorTotal = valorTotal
-
-    const pedidoCriado = await this.pedidoRepository.save(pedidoEntity)
-    return pedidoCriado
+    const pedidoCriado = await this.pedidoRepository.save(pedidoEntity);
+    return pedidoCriado;
   }
 
-    async obtemPedidosDeUsuario(usuarioId: string) {
+  async obtemPedidosDeUsuario(usuarioId: string) {
     return this.pedidoRepository.find({
       where: {
         usuario: { id: usuarioId },
@@ -81,16 +103,17 @@ export class PedidoService {
     });
   }
 
-  async atualizaPedido(id: string, dto: AtualizaPedidoDto){
-    const pedido = await this.pedidoRepository.findOneBy({id});
+  async atualizaPedido(id: string, dto: AtualizaPedidoDto) {
+    const pedido = await this.pedidoRepository.findOneBy({ id });
 
-    if(pedido === null){
-      throw new NotFoundException(`Pedido ID:${id} não encontrado.`);
+     //throw new Error('Simulando erro de banco de dados...');
+
+    
+    if (pedido === null) {
+      throw new NotFoundException('O pedido não foi encontrado.');
     }
-    else{
-      Object.assign(pedido, dto);
-      return this.pedidoRepository.save(pedido);
-    }
+    Object.assign(pedido, dto);
+    return this.pedidoRepository.save(pedido);
+  
   }
-
 }

@@ -1,13 +1,6 @@
-import { ImagemProdutoDTO } from './dto/ImagemProdutoDto';
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { ProdutoRepository } from "./produto.repository";
 import { CriaProdutoDTO } from "./dto/CriaProduto.dto";
-import { ProdutoEntity } from "./produto.entity";
-import { v4 as uudi} from 'uuid';
-import { ListaProdutoDTO } from "./dto/ListaProdutoDto";
 import { ProdutoService } from "./produto.service";
-import { ProdutoCaracteristicaEntity } from "./produto-caracteristica.entity";
-import { ProdutoImagemEntity } from './produto-imagem.entity';
 import { AtualizaProdutoDTO } from './dto/AtualizaProduto.dto';
 
 @Controller('/produtos')
