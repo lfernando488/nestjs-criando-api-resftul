@@ -23,7 +23,7 @@ export class PedidoController {
   @Patch(':id')
   atualizaPedido(@Param('id') pedidoId: string,@Body() dadosDeAtualizacao: AtualizaPedidoDto) {
     //teste
-    //throw new Error("Simulando erro de banco de dados...")
+    throw new Error("Simulando erro de banco de dados...")
     return this.pedidoService.atualizaPedido(pedidoId, dadosDeAtualizacao);
   }
   

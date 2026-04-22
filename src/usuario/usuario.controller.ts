@@ -17,10 +17,8 @@ export class UsuarioController {
     async criaUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
         
         const usuarioEntity = new UsuarioEntity();
-        usuarioEntity.email = dadosDoUsuario.email;
-        usuarioEntity.senha = dadosDoUsuario.senha;
-        usuarioEntity.nome = dadosDoUsuario.nome;
         usuarioEntity.id = uudi();
+        Object.assign(usuarioEntity, dadosDoUsuario as UsuarioEntity);       
 
         this.usuarioService.criaUsuario(usuarioEntity);
         return {

@@ -9,9 +9,11 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { CaracteristicaProdutoDTO, ImagemProdutoDTO } from './CriaProduto.dto';;
+import { CaracteristicaProdutoDTO, CriaProdutoDTO, ImagemProdutoDTO } from './CriaProduto.dto';
+import { PartialType } from '@nestjs/mapped-types';
 
-export class AtualizaProdutoDTO {
+export class AtualizaProdutoDTO extends PartialType(CriaProdutoDTO) {
+  /*
   @IsString()
   @IsNotEmpty({ message: 'Nome do produto não pode ser vazio' })
   @IsOptional()
@@ -50,4 +52,5 @@ export class AtualizaProdutoDTO {
   @IsNotEmpty({ message: 'Categoria do produto não pode ser vazia' })
   @IsOptional()
   categoria: string;
+*/
 }
