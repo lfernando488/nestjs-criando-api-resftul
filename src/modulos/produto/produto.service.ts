@@ -50,6 +50,27 @@ export class ProdutoService{
         return produtosLista;
     }
 
+    async listaUmProduto(id: string) {
+        const produto = await this.produtoRepository.findOne({
+            where: { id },
+            relations: {
+                imagens: true,
+                caracteristicas: true,
+            },
+        });
+
+        if(!produto){
+            throw new Error("Produto não encontrado!");
+        }
+
+        return new ListaProdutoDTO(
+            produto.id,
+            produto.nome,
+            produto.caracteristicas,
+            produto.imagens,
+        );
+    }
+
     async deletaProduto(id: string){
         await this.produtoRepository.delete(id);
     }

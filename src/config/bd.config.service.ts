@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
-import { PedidoEntity } from "src/pedido/pedido.entity";
-import { ProdutoCaracteristicaEntity } from "src/produto/produto-caracteristica.entity";
-import { ProdutoImagemEntity } from "src/produto/produto-imagem.entity";
-import { ProdutoEntity } from "src/produto/produto.entity";
-import { UsuarioEntity } from "src/usuario/usuario.entity";
+import { PedidoEntity } from "src/modulos/pedido/pedido.entity";
+import { ProdutoCaracteristicaEntity } from "src/modulos/produto/produto-caracteristica.entity";
+import { ProdutoImagemEntity } from "src/modulos/produto/produto-imagem.entity";
+import { ProdutoEntity } from "src/modulos/produto/produto.entity";
+import { UsuarioEntity } from "src/modulos/usuario/usuario.entity";
 
 @Injectable()
 export class BdConfigService implements TypeOrmOptionsFactory{

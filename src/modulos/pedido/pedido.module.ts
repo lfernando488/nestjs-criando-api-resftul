@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PedidoEntity } from './pedido.entity';
 import { UsuarioEntity } from '../usuario/usuario.entity';
 import { ItemPedidoEntity } from './itempedido.entity';
-import { ProdutoEntity } from 'src/produto/produto.entity';
+import { ProdutoEntity } from 'src/modulos/produto/produto.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PedidoEntity, UsuarioEntity, ProdutoEntity, ItemPedidoEntity])],
